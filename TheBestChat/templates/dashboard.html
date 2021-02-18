@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		The Best Social Media
+		</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href= "{{url_for('static',filename='css/dashboardStyle.css') }}">
+</head>
+<body class="home" onload="loadScroll()">
+	<ul id="test">
+			<div id="barContent" style="width:1100px; height:55px; margin-right:auto; margin-left:auto">
+						<a href="/profile">
+						<li>
+				  			<p id="sentUsername">{{ username }}</p>
+				  			<span class="dot"></span>
+				  		</li>
+				  		</a>
+				  		<a href="/logout">
+							<li style="float:right">
+				  				<p>Log out</p>
+				  			</li>
+				  		</a>
+				  		<a href="/dashboard">
+							<li style="float:right">
+				  				<p>Chats</p>
+				  			</li>
+				  		</a>
+				  		<a href="/profile">
+				  		<li style="float:right">
+				  			<p>Profile</p>
+				  		</li>
+				  		</a>
+				  		<a href="/articles">
+                            <li style="float:right">
+                                <p>Forum</p>
+                            </li>
+                        </a>
+			</div>
+	</div>
+	</ul>
+	<div id="profile">
+		<div id="profileImage">
+		</div>
+		<div id="chatConvo">
+			<p>Chatting with:</p>
+			<p id="curChat" style="display:inline-block">{{ convo }}</p>
+			{%for usr2 in users%}
+				{% if convo == usr2 %}
+					<span class="dot"></span>
+				{%endif%}
+			{%endfor%}
+		</div>
+		<hr>
+		{% for usr1 in usernames %}
+			<div class="profileContent" onclick="changeChat(this)">
+				<p id="{{ usr1 }}" style="display: inline-block;">{{ usr1 }}</p>
+				{%for usr2 in users%}
+				{%if usr1 == usr2%}
+					<span class="dot"></span>
+				{%endif%}
+				{%endfor%}
+				{%for usr in newMessages%}
+				{%if usr == usr1 and convo != usr1%}
+				<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJjSURBVGhD7dnL601RGMbxk2TgUhQxMJBMKGWCkSEyNGBgrgwkfwRlZqZkRAZKmFAupfgNlMvI/TKRck8K5VL4PoNfrfRw1lr7XWeT/dRntnvXfjvnrL3Ou0dDhgwZ8l9nDrbgAM7hPl7jHd7iIS7gILZiPv6qrMdRfMCPAp9xGpvQa1bjItxNlrqODZhoZmI/vsHdVK3vOILZaJ5FuAp3I1FuYzmaZSkewC0e7QXWIDz6JB7DLdqKdrwVCIt+E1Nwi7Wmb8A8hEQ/bLfIpBxD52iLrdmdLkM/2F8dh7t+nM7Pmktwhcc5C5dDcNePcw8zUJV1cEVzRDci21EVHTtcwRwtGrmC4ugA+BGuYI4WjejJvwxF0SnWFcvVohHZhaLoKO4K5WrVyAkURTfiCqWuQbuasw8ue+Cun+bWSekcVhT9CXKFUnrGRMetk/qCoryCK5TqoxHRRpSd93BFUn01shDZeQNXJNVXI0WHyCdwRVJ9NKJzX1HOwxVKncTh39gNlx1w109z66R0rC+KRjauUK5Wz5EzKIrmTq5QrlaN7EVRNDzTnu2K5WjVyEoU5xRcsRwtGrmFqmyEK5ijRSM7UZ0bcEXHiW7kKWahOhpj6n+AK/4n0Y1o2+4cjTFd8UnRBD8kmsXehVuktedYjLBo4qfJn1uslU/QK4vw6Gz1Em7RaHrXshnNok/mEdziUTTAXovmmQuNMd1NdKXD6hJMNBpjRm0CzxCyxdZGY8xt0PCs5nlzE3pid3rYRUfDM82dNLK5A73sTG/6KzTU0FFcp9hV+GeiQcEChL3jGDJkSGlGo5+FYtxxsuef3AAAAABJRU5ErkJggg==" class="newMessage">
+				{%endif%}
+				{%endfor%}
+			</div>
+		{% endfor %}
+	</div>
+	<div id="chatContent">
+			{% for msg in messages %}
+			{% if msg.username1 == username %}
+			<div id="messageContentSent">
+				<div id="messageDetails">
+					<p>{{ username }}</p>
+					<p>{{ msg.message_timestamp }}</p>
+				</div>
+				<div id="chat">
+					<p>{{ msg.message }}</p>
+				</div>
+			</div>
+			{% else %}
+			<div id="messageContentReceived">
+				<div id="messageDetails">
+					<p>{{ msg.username1 }}</p>
+					<p>{{ msg.message_timestamp }}</p>
+				</div>
+				<div id="chat">
+					<p>{{ msg.message }}</p>
+				</div>
+			</div>
+			{% endif %}
+			{% endfor %}
+	<div style="height:70px" id="buffer"></div>
+
+
+	</div>
+	<div id="chatBar">
+		<!--changed some things here that will load -->
+			<textarea type="textarea" id="private_message" style=" background-color:white;
+    width:82%;
+    float:left;
+    font-family:montLight;
+    margin-top:8px;
+    margin-left:1%;border-radius:3px;height:50px;font-size:20px; resize:none;" name="message" placeholder="type message"></textarea>
+			<button class="button" id="send_private_message" type="submit">
+				<p>send</p>
+			</button>
+			<input type="text" id="send_to_username" name="username1" style="visibility: hidden">
+	</div>
+	</div>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <script type="text/javascript"
+              src="http://code.jquery.com/jquery-3.2.1.min.js"
+              integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+              crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
